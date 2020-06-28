@@ -2,14 +2,11 @@ CREATE OR REPLACE TABLE `machine-learning-msc.low_carbon_london.household_consum
 SELECT 
 lcl_id,
 ts,
--- extract date elements
-EXTRACT(YEAR FROM ts) AS year,
-EXTRACT(MONTH FROM ts) AS month,
-EXTRACT(DAY FROM ts) AS day,
-EXTRACT(YEAR FROM ts)*100 + EXTRACT(MONTH FROM ts) AS yyyymm,
-EXTRACT(YEAR FROM ts)*10000+EXTRACT(MONTH FROM ts)*100+EXTRACT(DAY from ts) AS yyyymmdd,
+--extract ts elements
+CAST(TIMESTAMP_TRUNC(ts, YEAR) AS DATE) AS year,
+CAST(TIMESTAMP_TRUNC(ts, MONTH) AS DATE) AS month,
+CAST(TIMESTAMP_TRUNC(ts, DAY) AS DATE) AS day,
 
---extract time elements
 EXTRACT(HOUR FROM ts) AS hour,
 EXTRACT(MINUTE FROM ts) AS minute,
 
