@@ -10,12 +10,12 @@ CAST(TIMESTAMP_TRUNC(ts, DAY) AS DATE) AS day,
 EXTRACT(HOUR FROM ts) AS hour,
 EXTRACT(MINUTE FROM ts) AS minute,
 
+stdortou,
 COALESCE(tariffs.Tariff, "Normal") AS tariff_type,
-
 CASE 
-    WHEN stdortou = 'Tou' AND tariffs.Tariff = "Low" THEN 3.99
-    WHEN stdortou = 'Tou' AND  tariffs.Tariff = "Normal" THEN 11.76
-    WHEN stdortou = 'Tou' AND  tariffs.Tariff = "High" THEN 67.20
+    WHEN stdortou = 'ToU' AND tariffs.Tariff = "Low" THEN 3.99
+    WHEN stdortou = 'ToU' AND  tariffs.Tariff = "Normal" THEN 11.76
+    WHEN stdortou = 'ToU' AND  tariffs.Tariff = "High" THEN 67.20
     ELSE 14.228 
     END AS tariff,
 SAFE_CAST(kwhh AS FLOAT64) AS kwhh,
