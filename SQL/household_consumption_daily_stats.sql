@@ -24,11 +24,11 @@ WITH daily_sum AS (
   
 SELECT 
 *,
-SUM(daily_consumption) OVER month_to_date AS month_to_date_cumulative_sum,
-STDDEV(daily_consumption) OVER month_to_date AS month_to_date_cumulative_stddev,
-MAX(daily_consumption) OVER month_to_date AS month_to_date_cumulative_max,
-MIN(daily_consumption) OVER month_to_date AS month_to_date_cumulative_min,
-AVG(daily_consumption) OVER month_to_date AS month_to_date_cumulative_avg
+SUM(daily_consumption) OVER month_to_date AS month_to_date_cumulative_sum, -- cumulative month to date consumption
+STDDEV(daily_consumption) OVER month_to_date AS month_to_date_cumulative_stddev, -- std deviation of month to date consumption
+MAX(daily_consumption) OVER month_to_date AS month_to_date_cumulative_max, -- maximum of month to date consumption
+MIN(daily_consumption) OVER month_to_date AS month_to_date_cumulative_min, -- minimum of month to date consumption
+AVG(daily_consumption) OVER month_to_date AS month_to_date_cumulative_avg -- average of month to date consumption
 
 FROM daily_sum 
 WINDOW 
