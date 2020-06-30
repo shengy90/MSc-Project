@@ -9,6 +9,7 @@ WITH daily_sum AS (
   acorn_grouped,
   sample,
   tariff,
+  stdortou,
 
   -- daily stats 
   SUM(kwhh) AS daily_consumption,
@@ -19,7 +20,7 @@ WITH daily_sum AS (
 
 
   FROM `machine-learning-msc.low_carbon_london.household_consumption_stats`
-  GROUP BY 1,2,3,4,5,6,7
+  GROUP BY 1,2,3,4,5,6,7,8
   )
   
 SELECT 
