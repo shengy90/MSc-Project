@@ -1,7 +1,19 @@
 CREATE OR REPLACE TABLE `machine-learning-msc.low_carbon_london.household_consumption_daily_agg` AS 
 
 
-WITH data AS (
+WITH 
+households AS (
+	SELECT 
+	lcl_id,
+	COUNT(DISTINCT hhourly_rank) AS num_hhourly
+	FROM `machine-learning-msc.low_carbon_london.household_consumption_stats` 
+	WHERE stdortou = 'Std'
+	AND day >= '2012-10-01' AND day < '2013-10-01'
+	GROUP BY 1 
+	),
+
+
+data AS (
 	SELECT 
 	lcl_id,
 	acorn,
@@ -18,6 +30,7 @@ WITH data AS (
 	FROM `machine-learning-msc.low_carbon_london.household_consumption_stats` 
 	WHERE day >= '2012-10-01' AND day < '2013-10-01'
 	AND stdortou = 'Std'
+	AND lcl_id IN (SELECT lcl_id FROM households WHERE num_hhourly=48)
 	)
 
 SELECT 
