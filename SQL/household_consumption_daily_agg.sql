@@ -1,3 +1,6 @@
+CREATE OR REPLACE TABLE `machine-learning-msc.low_carbon_london.household_consumption_daily_agg` AS 
+
+
 WITH data AS (
 	SELECT 
 	lcl_id,
