@@ -35,6 +35,8 @@ data AS (
 
 SELECT 
 lcl_id,
+acorn_grouped,
+acorn,
 hhourly_rank,
 AVG(kwhh) AS hh_avg,
 MAX(kwhh) AS hh_max,
@@ -44,5 +46,5 @@ AVG(median) AS hh_median,
 AVG(quartile_25) AS hh_quartile_25,
 AVG(quartile_75) AS hh_quartile_75
 FROM data 
-GROUP BY 1,2
+GROUP BY 1,2,3,4
 
