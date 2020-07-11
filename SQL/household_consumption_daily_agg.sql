@@ -1,5 +1,8 @@
+/*
+Granularity of table: 1 row per lcl_id, per month, per day of week, per half-hourly. I.e. 1 lcl_id should have:
+12 months X 7 days a week X 48 half-hourly rows.
+*/
 CREATE OR REPLACE TABLE `machine-learning-msc.low_carbon_london.household_consumption_daily_agg` AS 
-
 
 WITH 
 households AS (
