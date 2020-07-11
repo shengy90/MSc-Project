@@ -8,7 +8,9 @@ WITH
 households AS (
 	SELECT 
 	lcl_id,
-	COUNT(DISTINCT hhourly_rank) AS num_hhourly
+	COUNT(DISTINCT hhourly_rank) AS num_hhourly,
+	COUNT(DISTINCT dayofweek) AS num_dayofweek,
+	COUNT(DISTINCT month) AS num_month
 	FROM `machine-learning-msc.low_carbon_london.household_consumption_stats` 
 	WHERE stdortou = 'Std'
 	AND day >= '2012-10-01' AND day < '2013-10-01'
@@ -22,7 +24,7 @@ raw_data AS (
 	FROM `machine-learning-msc.low_carbon_london.household_consumption_stats` 
 	WHERE stdortou = 'Std'
 	AND day >= '2012-10-01' AND day < '2013-10-01'
-	AND lcl_id IN (SELECT lcl_id FROM households WHERE num_hhourly=48)
+	AND lcl_id IN (SELECT lcl_id FROM households WHERE num_hhourly=48 AND num_dayofweek=7 AND num_month=12)
 	),
 
 
