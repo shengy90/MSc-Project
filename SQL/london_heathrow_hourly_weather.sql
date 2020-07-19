@@ -3,7 +3,7 @@ CREATE OR REPLACE TABLE `machine-learning-msc.london_heathrow_hourly_weather_dat
 WITH twentytwelve AS (
 
 	SELECT 
-	SAFE_CAST(meto_stmp_time AS TIMESTAMP) AS ts,
+	SAFE_CAST(ob_time AS TIMESTAMP) AS ts,
 	SAFE_CAST(wind_speed AS FLOAT64) AS wind_speed, 
 	COALESCE(SAFE_CAST(prst_wx_id AS INT64),0) AS weather_flag,
 	SAFE_CAST(cld_ttl_amt_id AS INT64) AS cloud_amount_flag,
@@ -25,7 +25,7 @@ twentythirteen AS (
 	SELECT 
 
 
-	SAFE_CAST(meto_stmp_time AS TIMESTAMP) AS ts,
+	SAFE_CAST(ob_time AS TIMESTAMP) AS ts,
 	SAFE_CAST(wind_speed AS FLOAT64) AS wind_speed, 
 	COALESCE(SAFE_CAST(prst_wx_id AS INT64),0) AS weather_flag,
 	SAFE_CAST(cld_ttl_amt_id AS INT64) AS cloud_amount_flag,
