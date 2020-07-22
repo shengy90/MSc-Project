@@ -19,5 +19,4 @@ FROM households
 LEFT JOIN `machine-learning-msc.low_carbon_london.household_consumption_stats` stat
   ON stat.lcl_id = households.lcl_id
   
-  
-  
+WHERE EXTRACT(MINUTE FROM stat.ts) IN (0, 30)
