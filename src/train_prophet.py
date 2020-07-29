@@ -11,6 +11,23 @@ def _get_training_period(df, date_filter):
     return df_out
 
 
+def _make_future_df(m, df):
+    future_df = m.make_future_dataframe(periods=1440, freq='30min')
+    future_df = future_df.merge(df, left_on='ds', right_on='ds')
+    return future_df
+
+
+def _evaluate_mape(df, forecast, test_period):
+    fc_start = test_period
+    y = df.query(f'ds>="{fc_start}"')[['ds','y']]
+    pred = forecast.query(f'ds>="{fc_start}"')[['ds', 'yhat']]
+    eval_df = y.merge(pred, on='ds')
+    eval_df['y'] = eval_df['y'] + 0.000000000001
+    eval_df['abs_err'] = np.abs((eval_df['y'] - eval_df['yhat']))
+    eval_df['abs_perc'] = np.round(eval_df['abs_err']/eval_df['y']*100,4)
+    return np.mean(eval_df['abs_perc'])
+
+
 class TrainProphet:
     def __init__(self, test_period):
         """
@@ -22,37 +39,24 @@ class TrainProphet:
         self.m.add_country_holidays(country_name="UK")
         self.m.add_regressor('air_temperature', mode='multiplicative')
 
-    def _make_future_df(self, df):
-        future_df = self.m.make_future_dataframe(periods=1440, freq='30min')
-        future_df = future_df.merge(df, left_on='ds', right_on='ds')
-        return future_df
-
-
-    def _evaluate_mape(self, df, forecast):
-        fc_start = self.test_period
-        y = df.query(f'ds>="{fc_start}"')[['ds','y']]
-        pred = forecast.query(f'ds>="{fc_start}"')[['ds', 'yhat']]
-        eval_df = y.merge(pred, on='ds')
-        eval_df['y'] = eval_df['y'] + 0.000000000001
-        eval_df['abs_err'] = np.abs((eval_df['y'] - eval_df['yhat']))
-        eval_df['abs_perc'] = np.round(eval_df['abs_err']/eval_df['y']*100,4)
-        return np.mean(eval_df['abs_perc'])
-
 
     def fit(self, df):
-        # Get training period
+        # Fit Model
         print("Getting Training Period..")
         train_df = _get_training_period(df, self.test_period)
         self.m.fit(train_df)
-        # Get forecast period
-        future_df = self._make_future_df(df)
 
+        # Get forecast
+        future_df = _make_future_df(self.m, df)
         forecast = self.m.predict(future_df)
-        mape = self._evaluate_mape(df, forecast)
+
+        # Evaluate Forecast
+        mape = _evaluate_mape(df, forecast, self.test_period)
 
         self.forecast = forecast
         self.mape = mape
-        return forecast, mape
+        return self
+
 
     def plot_forecast(self):
         plot = self.m.plot(self.forecast)
