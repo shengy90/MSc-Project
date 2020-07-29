@@ -53,6 +53,7 @@ class TrainProphet:
         # Evaluate Forecast
         mape = _evaluate_mape(df, forecast, self.test_period)
 
+        # Save forecast and training MAPE
         self.forecast = forecast
         self.training_mape = mape
         return self
@@ -67,7 +68,10 @@ class TrainProphet:
         test_df['y_global'] = test_df['y'] * test_df['max_households']
         test_df['yhat_global'] = test_df['yhat'] * test_df['max_households']
 
-        return test_df
+        # Save test forecast and test MAPE
+        self.test_mape = np.mean(np.abs(test_df['yhat_global']-test_df['y_global'] - 1))
+        self.test_forecast = test_df
+        return self
 
 
     def plot_forecast(self):
