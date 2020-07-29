@@ -1,7 +1,5 @@
 echo -e "\n Installing virtual environment.. ⏳"
-pyenv virtualenv msc-project
-pyenv local msc-project
-pyenv install 3.7.6
+pyenv virtualenv 3.7.6 msc-project
 
 pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
