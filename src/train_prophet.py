@@ -24,7 +24,7 @@ def _evaluate_mape(df, forecast, test_period):
     eval_df = y.merge(pred, on='ds')
     eval_df['y'] = eval_df['y'] + 0.000000000001
     eval_df['abs_err'] = np.abs((eval_df['y'] - eval_df['yhat']))
-    eval_df['abs_perc'] = np.round(eval_df['abs_err']/eval_df['y']*100,4)
+    eval_df['abs_perc'] = np.round(eval_df['abs_err']/eval_df['y'],4)*100
     return np.mean(eval_df['abs_perc'])
 
 
