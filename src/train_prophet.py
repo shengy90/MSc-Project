@@ -1,4 +1,5 @@
 import datetime as dt
+import numpy as np
 from fbprophet import Prophet
 from definitions.prophet_definitions import CUSTOM_HOLS
 
@@ -26,6 +27,18 @@ class TrainProphet:
         future_df = future_df.merge(df, left_on='ds', right_on='ds')
         return future_df
 
+
+    def _evaluate_mape(self, df, forecast):
+        fc_start = self.test_period
+        y = df.query(f'ds>="{fc_start}"')[['ds','y']]
+        pred = forecast.query(f'ds>="{fc_start}"')[['ds', 'yhat']]
+        eval_df = y.merge(pred, on='ds')
+        eval_df['y'] = eval_df['y'] + 0.000000000001
+        eval_df['abs_err'] = np.abs((eval_df['y'] - eval_df['yhat']))
+        eval_df['abs_perc'] = np.round(eval_df['abs_err']/eval_df['y']*100,4)
+        return np.mean(eval_df['abs_perc'])
+
+
     def fit(self, df):
         # Get training period
         print("Getting Training Period..")
@@ -35,7 +48,7 @@ class TrainProphet:
         future_df = self._make_future_df(df)
 
         forecast = self.m.predict(future_df)
-        mape = self.evaluate_mape(df)
+        mape = self._evaluate_mape(df, forecast)
 
         self.forecast = forecast
         self.mape = mape
@@ -44,7 +57,6 @@ class TrainProphet:
     def plot_forecast(self):
         plot = self.m.plot(self.forecast)
         return plot
-
 
     def plot_components(self):
         plot = self.m.plot_components(self.forecast)
