@@ -29,18 +29,17 @@ class TrainProphet:
     def fit(self, df):
         # Get training period
         print("Getting Training Period..")
-        # train_df = _get_training_period(df, self.test_period)
-        #         # self.m.fit(train_df)
-        #         # # Get forecast period
-        #         # future_df = self._make_future_df(df)
-        #         #
-        #         # forecast = self.m.predict(future_df)
-        #         # mape = self.evaluate_mape(df)
-        #         #
-        #         # self.forecast = forecast
-        #         # self.mape = mape
-        #         # return forecast,
-        return None
+        train_df = _get_training_period(df, self.test_period)
+        self.m.fit(train_df)
+        # Get forecast period
+        future_df = self._make_future_df(df)
+
+        forecast = self.m.predict(future_df)
+        mape = self.evaluate_mape(df)
+
+        self.forecast = forecast
+        self.mape = mape
+        return forecast, mape
 
     def plot_forecast(self):
         plot = self.m.plot(self.forecast)
