@@ -59,7 +59,7 @@ class TrainProphet:
 
 
     def evaluate_test_global_mape(self, df):
-        test_df = df.query(f"ds>='{self.test_period}'")
+        test_df = df.query(f"ds>='{self.test_period}'").copy()
         total_households = df['households_num'].max()
         test_df['y_global'] = test_df['y'] * total_households
 
