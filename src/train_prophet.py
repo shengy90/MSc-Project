@@ -69,7 +69,7 @@ class TrainProphet:
         test_df['yhat_global'] = test_df['yhat'] * test_df['max_households']
 
         # Save test forecast and test MAPE
-        self.test_mape = np.mean(np.abs(test_df['yhat_global']/test_df['y_global'] - 1))
+        self.test_mape = ROUND(np.mean(np.abs(test_df['yhat_global']/test_df['y_global'] - 1)),4) * 100
         self.test_forecast = test_df
         return self
 
