@@ -5,4 +5,4 @@ import os
 if __name__ == "__main__":
     model = TrainProphet("2013-02-01")
     model.fit(df)
-    print(model.mape)
+    model.evaluate_test_global_mape(df)
