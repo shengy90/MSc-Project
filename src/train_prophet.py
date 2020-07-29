@@ -63,7 +63,7 @@ class TrainProphet:
         total_households = df['households_num'].max()
         test_df['y_global'] = test_df['y'] * total_households
 
-        test_forecast = self.m[['ds','yhat']].copy()
+        test_forecast = self.forecast[['ds','yhat']].copy()
         test_forecast['yhat_global'] = test_forecast['yhat'] * total_households
 
         test_df = test_df.merge(test_forecast, left_on='ds', right_on='ds')
