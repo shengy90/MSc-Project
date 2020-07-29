@@ -15,7 +15,7 @@ class TrainProphet:
         self.m.add_regressor('air_temperature', mode='multiplicative')
 
 
-    def _get_training_period(df, date_filter):
+    def _get_training_period(self, df, date_filter):
         df_out = df.query(f"ds < '{date_filter}'").copy()
         assert len(df_out) < len(df)
         assert df_out['ds'].max() < dt.datetime.strptime(date_filter, "%Y-%m-%d")
@@ -28,6 +28,7 @@ class TrainProphet:
 
     def fit(self, df):
         # Get training period
+        print("Getting Training Period..")
         train_df = self._get_training_period(df, self.test_period)
         self.m.fit(train_df)
         # Get forecast period
