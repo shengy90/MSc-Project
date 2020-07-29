@@ -3,6 +3,13 @@ from fbprophet import Prophet
 from definitions.prophet_definitions import CUSTOM_HOLS
 
 
+def _get_training_period(df, date_filter):
+    df_out = df.query(f"ds < '{date_filter}'").copy()
+    assert len(df_out) < len(df)
+    assert df_out['ds'].max() < dt.datetime.strptime(date_filter, "%Y-%m-%d")
+    return df_out
+
+
 class TrainProphet:
     def __init__(self, test_period):
         """
@@ -14,13 +21,6 @@ class TrainProphet:
         self.m.add_country_holidays(country_name="UK")
         self.m.add_regressor('air_temperature', mode='multiplicative')
 
-
-    def _get_training_period(self, df, date_filter):
-        df_out = df.query(f"ds < '{date_filter}'").copy()
-        assert len(df_out) < len(df)
-        assert df_out['ds'].max() < dt.datetime.strptime(date_filter, "%Y-%m-%d")
-        return df_out
-
     def _make_future_df(self, df):
         future_df = self.m.make_future_dataframe(periods=1440, freq='30min')
         future_df = future_df.merge(df, left_on='ds', right_on='ds')
@@ -29,7 +29,7 @@ class TrainProphet:
     def fit(self, df):
         # Get training period
         print("Getting Training Period..")
-        train_df = self._get_training_period(df, self.test_period)
+        train_df = _get_training_period(df, self.test_period)
         self.m.fit(train_df)
         # Get forecast period
         future_df = self._make_future_df(df)
