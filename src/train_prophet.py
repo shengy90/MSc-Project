@@ -54,8 +54,20 @@ class TrainProphet:
         mape = _evaluate_mape(df, forecast, self.test_period)
 
         self.forecast = forecast
-        self.mape = mape
+        self.training_mape = mape
         return self
+
+
+    def evaluate_test_global_mape(self, df):
+        test_df = df.query(f"ds>={self.test_period}")
+        total_households = df['households_num'].max()
+        test_df['y_global'] = test_df['y'] * total_households
+
+        test_forecast = self.m[['ds','yhat']].copy()
+        test_forecast['yhat_global'] = test_forecast['yhat'] * total_households
+
+        test_df = test_df.merge(test_forecast, left_on='ds', right_on='ds')
+        return test_df
 
 
     def plot_forecast(self):
