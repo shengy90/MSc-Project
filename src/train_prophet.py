@@ -42,7 +42,6 @@ class TrainProphet:
 
     def fit(self, df):
         # Fit Model
-        print("Getting Training Period..")
         train_df = _get_training_period(df, self.test_period)
         self.m.fit(train_df)
 
