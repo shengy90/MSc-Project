@@ -56,6 +56,8 @@ class TrainProphet:
         # Save forecast and training MAPE
         self.forecast = forecast
         self.training_mape = mape
+
+        print(f"Training Mean Absolute Percentage Error: {self.training_mape}")
         return self
 
 
@@ -71,6 +73,8 @@ class TrainProphet:
         # Save test forecast and test MAPE
         self.test_mape = ROUND(np.mean(np.abs(test_df['yhat_global']/test_df['y_global'] - 1)),4) * 100
         self.test_forecast = test_df
+
+        print(f"Test Mean Absolute Percentage Error: {self.test_mape}")
         return self
 
 
