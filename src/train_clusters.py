@@ -106,7 +106,7 @@ class TrainClusters:
 
     def _predict_agglo(self, df):
         agglo_predictions = df.copy()
-        agglo_predictions['cluster'] = pd.Categorical(self.cluster_model.fit_predict(df.values))
+        agglo_predictions['cluster'] = pd.Categorical(self.cluster_model.fit_predict(df.values)).astype(int)
         agglo_predictions.reset_index(inplace=True)
         return agglo_predictions
 
