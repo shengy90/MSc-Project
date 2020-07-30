@@ -17,8 +17,7 @@ def _pivot_df(df, value_list:list, column_list:list) ->str:
     :param column_list: list of columns that we want to pivot
     :return: pivoted pandas DataFrame
     """
-    pivot_df = pd.pivot_table(df, values=value_list, index=['lcl_id'], columns=column_list,
-                          aggfunc=np.sum)
+    pivot_df = pd.pivot_table(df, values=['hh_avg'], index=['lcl_id'], columns=['month_name','weekly_rank'], aggfunc=np.sum)
     pivot_df.columns = [''.join(str(col)) for col in pivot_df.columns]
     return pivot_df
 
@@ -37,13 +36,13 @@ class Normaliser:
 
         self.mean = mean
         self.std = std
-        return train_norm.values
+        return train_norm
 
 
     def predict(self, test_df):
         df = _pivot_df(test_df, value_list=self.value_list, column_list=self.column_list)
         test_norm = (df - self.mean)/self.std
-        return test_norm.values
+        return test_norm
 
 
 
