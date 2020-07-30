@@ -1,8 +1,18 @@
 from src.train_prophet import TrainProphet
+from src.train_clusters import TrainClusters, Normaliser
 from definitions.prophet_definitions import TEST_DF as df
-import os
+from definitions.cluster_definition import CLUSTER_DUMMY_DF
 
 if __name__ == "__main__":
-    model = TrainProphet("2013-02-01")
-    model.fit(df)
-    model.evaluate_test_global_mape(df)
+    normaliser = Normaliser(value_list=['hh_avg'], column_list=['month_name','dayofweek'])
+    norm_df_train = normaliser.fit(CLUSTER_DUMMY_DF)
+    norm_df_test = normaliser.fit(CLUSTER_DUMMY_DF)
+
+    print(CLUSTER_DUMMY_DF.head())
+    print(CLUSTER_DUMMY_DF.shape)
+    print(norm_df_train.shape)
+
+
+    # som_cluster = TrainClusters(cluster_type="som")
+    # som_cluster.fit(norm_df_train, cluster_num=3, iter_num=100)
+    # print(som_cluster.__dict__)

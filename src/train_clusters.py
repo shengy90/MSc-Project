@@ -24,17 +24,25 @@ def _pivot_df(df, value_list:list, column_list:list) ->str:
 
 
 class Normaliser:
-    def __init__(self):
-        pass
+    def __init__(self, value_list, column_list):
+        self.value_list = value_list
+        self.column_list = column_list
+
 
     def fit(self, train_df):
-        self.mean = np.mean(self.train_df, axis=0)
-        self.std = np.std(self.train_df, axis=0)
-        train_norm = (train_df - self.mean)/self.std
+        df = _pivot_df(train_df, value_list=self.value_list, column_list=self.column_list)
+        mean = np.mean(df, axis=0)
+        std = np.std(df, axis=0)
+        train_norm = (df - mean)/std
+
+        self.mean = mean
+        self.std = std
         return train_norm.values
 
+
     def predict(self, test_df):
-        test_norm = (test_df - self.mean)/self.std
+        df = _pivot_df(test_df, value_list=self.value_list, column_list=self.column_list)
+        test_norm = (df - self.mean)/self.std
         return test_norm.values
 
 
@@ -54,6 +62,9 @@ class TrainClusters:
         return som
 
     def fit(self, train_df, cluster_num, iter_num=100000):
+        self.train_df = train_df
+        self.cluster_num = cluster_num
+        self.iter_num = iter_num
         if self.cluster_type == 'som':
             self.cluster_model = self.train_som(train_df, cluster_num, iter_num)
         else:
