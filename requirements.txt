@@ -6,3 +6,4 @@ matplotlib==3.2.2
 seaborn==0.10.1
 fbprophet==0.6
 tqdm==4.41.1
+MiniSom==2.2.6
