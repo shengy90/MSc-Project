@@ -60,8 +60,13 @@ class TrainProphet:
         return self
 
 
-    def evaluate_test_global_mape(self, df):
-        test_df = df.query(f"ds>='{self.test_period}'").copy()
+    def evaluate_test_global_mape(self, df, test_period=None):
+        if test_period is not None:
+            test_period = test_period
+        else:
+            test_period = self.test_period
+
+        test_df = df.query(f"ds>='{test_period}'").copy()
         test_df['max_households'] = test_df['households_num'].max()
         test_forecast = self.m.predict(test_df[['ds','y','air_temperature']])
         test_forecast = test_forecast[['ds','yhat']]
