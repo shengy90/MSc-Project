@@ -58,11 +58,18 @@ twentyfourteen AS (
 	FROM `machine-learning-msc.london_heathrow_hourly_weather_data.london_heathrow_hourly_2014`
 
 	WHERE ob_time != 'end data'
+	),
+
+union_all AS (
+	SELECT * FROM twentytwelve
+	UNION ALL
+	SELECT * FROM twentythirteen
+	UNION ALL
+	SELECT * FROM twentyfourteen
 	)
 
-SELECT * FROM twentytwelve
-UNION ALL
-SELECT * FROM twentythirteen
-UNION ALL
-SELECT * FROM twentyfourteen
+SELECT
+* EXCEPT(air_temperature),
+LAST_VALUE(air_temperature IGNORE NULLS) OVER (ORDER BY ts ASC) AS air_temperature
+FROM union_all
 
