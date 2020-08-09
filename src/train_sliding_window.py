@@ -69,7 +69,7 @@ def generate_query_strings(start_date, end_date):
 def normalise_df(som_df):
     value_list = ['hh_avg']
     column_list = ['month_name', 'weekly_rank']
-     
+    normaliser = Normaliser(value_list, column_list)
 
     train_df = som_df.query('train_test_split=="train"')
     test_df = som_df.query('train_test_split=="test"')
