@@ -61,7 +61,7 @@ class TrainProphet:
         return self
 
 
-    def evaluate_test_global_mape(self, train_test_split, df, test_period=None):
+    def evaluate_global_mape(self, train_test_split, df, test_period=None):
         if test_period is not None:
             test_period = test_period
         else:
