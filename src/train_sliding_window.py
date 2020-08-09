@@ -55,7 +55,7 @@ def generate_query_strings(start_date, end_date):
         data.lcl_id,
         data.ts AS ds,
         data.kwhh AS y,
-        weather.air_temperature
+        LAST_VALUE(weather.air_temperature IGNORE NULLS) OVER (PARTITION BY data.lcl_id ORDER BY data.ts ASC) AS air_temperature
         
         FROM all_data data
         LEFT JOIN `machine-learning-msc.london_heathrow_hourly_weather_data.london_heathrow_hourly_weather` weather 
