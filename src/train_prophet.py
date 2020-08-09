@@ -6,6 +6,8 @@ from definitions.prophet_definitions import CUSTOM_HOLS
 
 def _get_training_period(df, date_filter):
     df_out = df.query(f"ds < '{date_filter}'").copy()
+    assert len(df_out) < len(df)
+    assert df_out['ds'].max() < dt.datetime.strptime(date_filter, "%Y-%m-%d")
     return df_out
 
 
