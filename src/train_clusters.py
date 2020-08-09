@@ -1,7 +1,6 @@
 from sklearn.decomposition import PCA
 from sklearn.cluster import AgglomerativeClustering
 from minisom import MiniSom
-from tqdm import tqdm
 
 import pandas as pd
 import numpy as np
@@ -68,7 +67,7 @@ class TrainClusters:
         som_cluster_df = pd.DataFrame(df.groupby(['lcl_id']).count().reset_index()[['lcl_id']])
         som_cluster_df['cluster'] = np.NaN
 
-        for idx, xx in tqdm(enumerate(df.values)):
+        for idx, xx in enumerate(df.values):
             som_cluster_df.loc[idx, 'cluster'] = self.cluster_model.winner(xx)[1].astype(int)
 
         som_cluster_df = som_cluster_df.merge(df, on='lcl_id', how='inner')
