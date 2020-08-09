@@ -17,6 +17,7 @@ def _pivot_df(df, value_list:list, column_list:list) ->str:
     """
     pivot_df = pd.pivot_table(df, values=value_list, index=['lcl_id'], columns=column_list, aggfunc=np.sum)
     pivot_df.columns = [''.join(str(col)) for col in pivot_df.columns]
+    pivot_df.fillna(0, inplace=True)
     return pivot_df
 
 def _generate_column_names(n_components):
