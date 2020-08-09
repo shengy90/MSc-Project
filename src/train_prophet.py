@@ -74,6 +74,7 @@ class TrainProphet:
         # calculate global forecasts
         test_df['y_global'] = test_df['y'] * test_df['max_households']
         test_df['yhat_global'] = test_df['yhat'] * test_df['max_households']
+        test_df = som_test_global[['cluster', 'ds', 'y', 'max_households', 'yhat', 'y_global', 'yhat_global']]
 
         # Save test forecast and test MAPE
         self.test_mape = np.round(np.mean(np.abs(test_df['yhat_global']/test_df['y_global'] - 1)),4) * 100
