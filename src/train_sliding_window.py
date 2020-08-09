@@ -6,6 +6,66 @@ import pandas as pd
 import numpy as np
 
 
+def generate_query_strings(start_date, end_date, query_type):
+    start_date = start_date
+    end_date = end_date
+
+    som_query_string = f"""
+        WITH 
+        raw_data AS (
+            SELECT * FROM `machine-learning-msc.forecasting_20200719.train_set` data 
+            UNION ALL 
+            SELECT * FROM `machine-learning-msc.forecasting_20200719.test_set` data 
+            ),
+    
+        stg1 AS (
+            SELECT 
+            data.lcl_id,
+            split.train_test_split,
+            FORMAT_DATETIME('%B', DATETIME(data.ts)) AS month_name,
+            data.dayofweek,
+            data.hhourly_rank,
+            ROUND(AVG(data.kwhh),4) AS hh_avg
+    
+            FROM raw_data data
+    
+            INNER JOIN `machine-learning-msc.households.train_test_split` split 
+                ON split.lcl_id = data.lcl_id 
+    
+            WHERE data.ts >= '{start_date}' AND data.ts < '{end_date}'
+            AND split.random_state = 'original_split'
+            GROUP BY 1,2,3,4,5
+            )
+    
+        SELECT 
+        *,
+        ROW_NUMBER() OVER (PARTITION BY lcl_id, month_name ORDER BY dayofweek ASC, hhourly_rank ASC) AS weekly_rank
+        FROM stg1 
+        ORDER BY lcl_id, month_name, weekly_rank, hhourly_rank
+        """
+
+    ts_query_string =f"""
+        WITH all_data AS (
+            SELECT * FROM `machine-learning-msc.forecasting_20200719.test_set`
+            UNION ALL 
+            SELECT * FROM `machine-learning-msc.forecasting_20200719.train_set`   
+            )
+        
+        SELECT 
+        data.lcl_id,
+        data.ts AS ds,
+        data.kwhh AS y,
+        weather.air_temperature
+        
+        FROM all_data data
+        LEFT JOIN `machine-learning-msc.london_heathrow_hourly_weather_data.london_heathrow_hourly_weather` weather 
+          ON TIMESTAMP_TRUNC(weather.ts, HOUR) = TIMESTAMP_TRUNC(data.ts, hour)
+        WHERE data.ts >= '{start_date}' AND data.ts < '{end_date}'
+        ORDER BY 1,2 ASC
+        """
+
+    return som_query_string, ts_query_string
+
 def normalise_df(som_df):
     value_list = ['hh_avg']
     column_list = ['month_name', 'weekly_rank']
