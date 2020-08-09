@@ -40,7 +40,7 @@ class TrainProphet:
         self.m.add_regressor('air_temperature', mode='multiplicative')
 
 
-    def fit(self, df):
+    def fit(self, df, verbose=False):
         # Fit Model
         train_df = _get_training_period(df, self.test_period)
         self.m.fit(train_df)
@@ -57,11 +57,12 @@ class TrainProphet:
         self.training_mape = mape
         self.training_mape_df = training_mape_df
 
-        print(f"Training Mean Absolute Percentage Error: {self.training_mape}")
+        if verbose is True:
+            print(f"Training Mean Absolute Percentage Error: {self.training_mape}")
         return self
 
 
-    def evaluate_global_mape(self, train_test_split, df, test_period=None):
+    def evaluate_global_mape(self, train_test_split, df, test_period=None, verbose=False):
         if test_period is not None:
             test_period = test_period
         else:
@@ -87,7 +88,8 @@ class TrainProphet:
         else:
             raise ValueError("train_test_split must be in ['train','test']")
 
-        print(f"Global {train_test_split} Mean Absolute Percentage Error: {self.test_mape}")
+        if verbose is True:
+            print(f"Global {train_test_split} Mean Absolute Percentage Error: {self.test_mape}")
         return self
 
 

@@ -66,7 +66,7 @@ def train_baseline(ts_df, som_clusters, eval_date):
     return baseline_model
 
 
-def train_som_forecasts(ts_df, som_clusters, eval_date):
+def train_som_forecasts(ts_df, som_clusters, eval_date, verbose=False):
     clusters = som_clusters.groupby('cluster').count().index.to_list()
 
     train_global_fc = pd.DataFrame()
@@ -76,7 +76,8 @@ def train_som_forecasts(ts_df, som_clusters, eval_date):
         cluster_df = som_clusters.query(f"cluster=={cluster}")
         train, test = get_ts_inputs(ts_df, cluster_df)
 
-        print(f"\nTraining cluster: {cluster}. Number of train households: {train['households_num'].max()}. Number of test households: {test['households_num'].max()}.")
+        if verbose is True:
+            print(f"\nTraining cluster: {cluster}. Number of train households: {train['households_num'].max()}. Number of test households: {test['households_num'].max()}.")
 
         model = TrainProphet(eval_date)
         model.fit(train)
@@ -84,14 +85,6 @@ def train_som_forecasts(ts_df, som_clusters, eval_date):
         model.evaluate_global_mape(train_test_split='train', df=train, test_period=eval_date)
         test_global_fc = pd.concat([test_global_fc, model.test_global])
         train_global_fc = pd.concat([train_global_fc, model.train_global])
-
-        # train_forecast = train[['cluster', 'ds', 'y']].copy()
-        # train_forecast['max_households'] = train['households_num'].max()
-        # train_forecast = train_forecast.merge(model.forecast[['ds', 'yhat']], left_on='ds', right_on='ds')
-        # train_forecast['y_global'] = train_forecast['y'] * train_forecast['max_households']
-        # train_forecast['yhat_global'] = train_forecast['yhat'] * train_forecast['max_households']
-
-        # train_global_fc = pd.concat([train_global_fc, train_forecast])
 
     return model, train_global_fc, test_global_fc
 
