@@ -25,7 +25,7 @@ def _evaluate_mape(df, forecast, test_period):
     eval_df['y'] = eval_df['y'] + 0.000000000001
     eval_df['abs_err'] = np.abs((eval_df['y'] - eval_df['yhat']))
     eval_df['abs_perc'] = np.round(eval_df['abs_err']/eval_df['y'],4)*100
-    return np.mean(eval_df['abs_perc'])
+    return np.mean(eval_df['abs_perc']), eval_df
 
 
 class TrainProphet:
@@ -50,11 +50,12 @@ class TrainProphet:
         forecast = self.m.predict(future_df)
 
         # Evaluate Forecast
-        mape = _evaluate_mape(df, forecast, self.test_period)
+        mape, training_mape_df = _evaluate_mape(df, forecast, self.test_period)
 
         # Save forecast and training MAPE
         self.forecast = forecast
         self.training_mape = mape
+        self.training_mape_df = training_mape_df
 
         print(f"Training Mean Absolute Percentage Error: {self.training_mape}")
         return self
