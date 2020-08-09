@@ -1,6 +1,6 @@
-from train_clusters import TrainClusters
-from train_clusters import Normaliser
-from train_prophet import TrainProphet
+from src.train_clusters import TrainClusters
+from src.train_clusters import Normaliser
+from src.train_prophet import TrainProphet
 
 import pandas as pd
 import numpy as np
@@ -75,8 +75,7 @@ def train_som_forecasts(ts_df, som_clusters, eval_date):
         cluster_df = som_clusters.query(f"cluster=={cluster}")
         train, test = get_ts_inputs(ts_df, cluster_df)
 
-        print(
-            f"\nTraining cluster: {cluster}. Number of train households: {train['households_num'].max()}. Number of test households: {test['households_num'].max()}.")
+        print(f"\nTraining cluster: {cluster}. Number of train households: {train['households_num'].max()}. Number of test households: {test['households_num'].max()}.")
 
         model = TrainProphet(eval_date)
         model.fit(train)
