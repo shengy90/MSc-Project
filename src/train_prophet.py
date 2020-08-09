@@ -61,7 +61,7 @@ class TrainProphet:
         return self
 
 
-    def evaluate_test_global_mape(self, df, test_period=None):
+    def evaluate_test_global_mape(self, train_test_split, df, test_period=None):
         if test_period is not None:
             test_period = test_period
         else:
@@ -79,9 +79,15 @@ class TrainProphet:
 
         # Save test forecast and test MAPE
         self.test_mape = np.round(np.mean(np.abs(test_df['yhat_global']/test_df['y_global'] - 1)),4) * 100
-        self.test_forecast = test_df
 
-        print(f"Test Mean Absolute Percentage Error: {self.test_mape}")
+        if train_test_split == "train":
+            self.train_global = test_df
+        elif train_test_split == "test":
+            self.test_global = test_df
+        else:
+            raise ValueError("train_test_split must be in ['train','test']")
+
+        print(f"Global {train_test_split} Mean Absolute Percentage Error: {self.test_mape}")
         return self
 
 

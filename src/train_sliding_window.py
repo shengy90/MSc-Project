@@ -61,7 +61,8 @@ def train_baseline(ts_df, som_clusters, eval_date):
     train_df, test_df = get_ts_inputs(ts_df, som_clusters)
     baseline_model = TrainProphet(eval_date)
     baseline_model.fit(train_df)
-    baseline_model.evaluate_test_global_mape(test_df, test_period=eval_date)
+    baseline_model.evaluate_test_global_mape(train_test_split="train", train_df, test_period=eval_date)
+    baseline_model.evaluate_test_global_mape(train_test_split="test", test_df, test_period=eval_date)
     return baseline_model
 
 
