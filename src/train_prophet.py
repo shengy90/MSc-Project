@@ -6,8 +6,6 @@ from definitions.prophet_definitions import CUSTOM_HOLS
 
 def _get_training_period(df, date_filter):
     df_out = df.query(f"ds < '{date_filter}'").copy()
-    assert len(df_out) < len(df)
-    assert df_out['ds'].max() < dt.datetime.strptime(date_filter, "%Y-%m-%d")
     return df_out
 
 
@@ -74,7 +72,7 @@ class TrainProphet:
         # calculate global forecasts
         test_df['y_global'] = test_df['y'] * test_df['max_households']
         test_df['yhat_global'] = test_df['yhat'] * test_df['max_households']
-        test_df = som_test_global[['cluster', 'ds', 'y', 'max_households', 'yhat', 'y_global', 'yhat_global']]
+        test_df = test_df[['cluster', 'ds', 'y', 'max_households', 'yhat', 'y_global', 'yhat_global']]
 
         # Save test forecast and test MAPE
         self.test_mape = np.round(np.mean(np.abs(test_df['yhat_global']/test_df['y_global'] - 1)),4) * 100
