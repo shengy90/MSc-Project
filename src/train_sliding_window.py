@@ -80,16 +80,18 @@ def train_som_forecasts(ts_df, som_clusters, eval_date):
 
         model = TrainProphet(eval_date)
         model.fit(train)
-        model.evaluate_test_global_mape(test, test_period=eval_date)
-        test_global_fc = pd.concat([test_global_fc, model.test_forecast])
+        model.evaluate_global_mape(train_test_split='test', df=test, test_period=eval_date)
+        model.evaluate_global_mape(train_test_split='train', df=train, test_period=eval_date)
+        test_global_fc = pd.concat([test_global_fc, model.test_global])
+        train_global_fc = pd.concat([train_global_fc, model.train_global])
 
-        train_forecast = train[['cluster', 'ds', 'y']].copy()
-        train_forecast['max_households'] = train['households_num'].max()
-        train_forecast = train_forecast.merge(model.forecast[['ds', 'yhat']], left_on='ds', right_on='ds')
-        train_forecast['y_global'] = train_forecast['y'] * train_forecast['max_households']
-        train_forecast['yhat_global'] = train_forecast['yhat'] * train_forecast['max_households']
+        # train_forecast = train[['cluster', 'ds', 'y']].copy()
+        # train_forecast['max_households'] = train['households_num'].max()
+        # train_forecast = train_forecast.merge(model.forecast[['ds', 'yhat']], left_on='ds', right_on='ds')
+        # train_forecast['y_global'] = train_forecast['y'] * train_forecast['max_households']
+        # train_forecast['yhat_global'] = train_forecast['yhat'] * train_forecast['max_households']
 
-        train_global_fc = pd.concat([train_global_fc, train_forecast])
+        # train_global_fc = pd.concat([train_global_fc, train_forecast])
 
     return model, train_global_fc, test_global_fc
 
