@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 
 
-def generate_query_strings(start_date, end_date, query_type):
+def generate_query_strings(start_date, end_date):
     start_date = start_date
     end_date = end_date
 
