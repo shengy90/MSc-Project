@@ -79,9 +79,9 @@ def normalise_df(som_df):
     return train_norm, test_norm
 
 
-def train_clusters(train_df, test_df):
+def train_clusters(train_df, test_df, cluster_num):
     som = TrainClusters(cluster_type="som")
-    som.fit(train_df, cluster_num=5, sigma=0.1, learning_rate=0.1)
+    som.fit(train_df, cluster_num=cluster_num, sigma=0.1, learning_rate=0.1)
     train_pred = som.predict(train_df)
     test_pred = som.predict(test_df)
     train_pred['train_test_split'] = 'train'
@@ -90,9 +90,9 @@ def train_clusters(train_df, test_df):
     return clusters
 
 
-def train_som(som_df):
+def train_som(som_df, cluster_num):
     train_df, test_df = normalise_df(som_df)
-    clusters = train_clusters(train_df, test_df)
+    clusters = train_clusters(train_df, test_df, cluster_num)
     clusters = clusters[['lcl_id','cluster','train_test_split']]
     return clusters
 
