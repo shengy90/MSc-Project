@@ -5,6 +5,16 @@ from src.train_prophet import TrainProphet
 import pandas as pd
 import numpy as np
 
+def _calculate_y(df):
+    households_num = df['lcl_id'].nunique()
+    df_y = pd.DataFrame(df.groupby('ds')['y'].sum()) / households_num
+    df_y['households_num'] = households_num
+    df_y.reset_index(inplace=True)
+
+    df_global = df.groupby('ds')[['air_temperature', 'cluster']].mean().reset_index()
+
+    df_global = df_global.merge(df_y, left_on='ds', right_on='ds')
+    return df_global
 
 def generate_query_strings(start_date, end_date):
     start_date = start_date
@@ -109,11 +119,8 @@ def get_ts_inputs(ts_df, som_clusters):
                        how='inner'
                        )
 
-    train['households_num'] = train['lcl_id'].nunique()
-    test['households_num'] = test['lcl_id'].nunique()
-
-    train = train.groupby('ds').mean().reset_index()
-    test = test.groupby('ds').mean().reset_index()
+    train = _calculate_y(train)
+    test = _calculate_y(test)
     return train, test
 
 
