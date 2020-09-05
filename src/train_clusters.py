@@ -60,7 +60,7 @@ class TrainClusters:
         m_neurons = cluster_num
         som = MiniSom(n_neurons, m_neurons, train_df.shape[1],
                       sigma=sigma, learning_rate=learning_rate, neighborhood_function='gaussian', random_seed=0)
-        som.train(train_df.values, iter_num, verbose=True)
+        som.train(train_df.values, iter_num, verbose=False)
         return som
 
 
